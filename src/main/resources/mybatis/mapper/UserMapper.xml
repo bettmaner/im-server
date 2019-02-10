@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ncu.zww.imserver.mapper.UserMapper">
+    <!--public User getUserById(String id);
+    public void insertUser(User user);-->
+    <select id="getUserById" resultType="edu.ncu.zww.imserver.bean.User">
+      select * from user where id = #{id}
+    </select>
+
+    <insert id="insertUser">
+        insert into user(id,name,email,password,isOnline,img,sex,ip,port,group)
+        values (#{id},#{name},#{email},#{password},#{isOnline},#{img},#{sex},#{ip},#{port},#{group})
+    </insert>
+
+    <update id="createTableByUserId" parameterType="Integer">
+    	create table t${tableName} (
+          orderid int(255) primary key not null auto_increment,
+          buyerid int(255),
+          buyername varchar(255),
+          buyeraddress varchar(255),
+          buyertelephone varchar(255),
+          goodsid int(255),
+          goodsname varchar(255),
+          goodsimgsrc varchar(255),
+          orderstatus int(10),
+          price decimal(10,2),
+          amount int(255),
+          evaluation varchar(255),
+          rank int(10),
+          date timestamp NULL DEFAULT CURRENT_TIMESTAMP);
+    </update>
+
+</mapper>
