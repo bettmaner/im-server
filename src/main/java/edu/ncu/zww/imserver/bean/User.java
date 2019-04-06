@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int id;  // 登录账号
+    private int account;  // 登录账号
     private String name;    // 昵称
     private String email;   // qq邮箱
     private String password;
@@ -13,22 +13,22 @@ public class User implements Serializable {
     private int isOnline; // 0 离线, 1 在线
     private String ip;
     private int port;
-    private int group;  // 哪一个分组
+    private int groups;  // 哪一个分组
 
-    public int getId() {
-        return id;
+    public int getAccount() {
+        return account;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAccount(int account) {
+        this.account = account;
     }
 
-    public int getGroup() {
-        return group;
+    public int getGroups() {
+        return groups;
     }
 
-    public void setGroup(int group) {
-        this.group = group;
+    public void setGroups(int groups) {
+        this.groups = groups;
     }
 
     public String getName() {
@@ -99,7 +99,7 @@ public class User implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof User) {
             User user = (User) o;
-            if (user.getId() == id && user.getIp().equals(ip)
+            if (user.getAccount() == account && user.getIp().equals(ip)
                     && user.getPort() == port) {
                 return true;
             }
@@ -109,9 +109,9 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", name=" + name + ", email=" + email
+        return "User [account=" + account + ", name=" + name + ", email=" + email
                 + ", password=" + password + ", isOnline=" + isOnline
-                + ", img=" + img + ", sex=" + sex + ", ip=" + ip + ", port=" + port + ", group="
-                + group + "]";
+                + ", img=" + img + ", sex=" + sex + ", ip=" + ip + ", port=" + port + ", groups="
+                + groups + "]";
     }
 }

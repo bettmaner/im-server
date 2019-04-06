@@ -1,17 +1,14 @@
 package edu.ncu.zww.imserver.controller;
 
+import edu.ncu.zww.imserver.common.util.ApplicationContextUtil;
 import edu.ncu.zww.imserver.common.util.Constants;
-import edu.ncu.zww.imserver.common.util.EmailType;
 import edu.ncu.zww.imserver.common.util.MyDate;
-import edu.ncu.zww.imserver.service.InputThread;
-import edu.ncu.zww.imserver.service.OutputThread;
-import edu.ncu.zww.imserver.service.OutputThreadMap;
-import edu.ncu.zww.imserver.service.tools.MailService;
+import edu.ncu.zww.imserver.service.UserService;
+import edu.ncu.zww.imserver.service.socket.InputThread;
+import edu.ncu.zww.imserver.service.socket.OutputThread;
+import edu.ncu.zww.imserver.service.socket.OutputThreadMap;
 import edu.ncu.zww.imserver.service.tools.MailServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -24,8 +21,6 @@ public class Server {
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     private boolean isStarted = true;
-
-    @Autowired
     private MailServiceImpl mailService;
 
     public Server() {
@@ -36,6 +31,7 @@ public class Server {
             serverSocket = new ServerSocket(Constants.SERVER_PORT);
             String ip = InetAddress.getLocalHost().getHostAddress();
             System.out.println("服务器ip地址：" + ip);
+
             //mailService.sendMail("1756919428@qq.com",EmailType.REGISTER);
         } catch (IOException e) {
             e.printStackTrace();

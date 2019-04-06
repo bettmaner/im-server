@@ -5,31 +5,45 @@
 <mapper namespace="edu.ncu.zww.imserver.mapper.UserMapper">
     <!--public User getUserById(String id);
     public void insertUser(User user);-->
-    <select id="getUserById" resultType="edu.ncu.zww.imserver.bean.User">
-      select * from user where id = #{id}
+
+    <select id="getAccount" resultType="Integer">
+        select ifnull(max(account),0) as account from user where email = #{email}
+    </select>
+
+    <select id="getUserByAccount" resultType="edu.ncu.zww.imserver.bean.User">
+      select * from user where account = #{account};
+    </select>
+
+    <select id="login" resultType="Integer">
+        SELECT COUNT(*) FROM user
+        <where>
+            <if test="account!=0">
+                AND account = #{account}
+            </if>
+            <if test="password!=null">
+                AND password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
+        select * from t${account}
     </select>
 
     <insert id="insertUser">
-        insert into user(id,name,email,password,isOnline,img,sex,ip,port,group)
-        values (#{id},#{name},#{email},#{password},#{isOnline},#{img},#{sex},#{ip},#{port},#{group})
+        insert into user(account,name,email,password,isOnline,img,sex,groups,ip,port)
+        values (#{account},#{name},#{email},#{password},#{isOnline},#{img},#{sex},#{groups},#{ip},#{port})
     </insert>
 
-    <update id="createTableByUserId" parameterType="Integer">
+    <update id="createTableByUserAccount" parameterType="Integer">
     	create table t${tableName} (
-          orderid int(255) primary key not null auto_increment,
-          buyerid int(255),
-          buyername varchar(255),
-          buyeraddress varchar(255),
-          buyertelephone varchar(255),
-          goodsid int(255),
-          goodsname varchar(255),
-          goodsimgsrc varchar(255),
-          orderstatus int(10),
-          price decimal(10,2),
-          amount int(255),
-          evaluation varchar(255),
-          rank int(10),
-          date timestamp NULL DEFAULT CURRENT_TIMESTAMP);
+          account int(255) primary key not null auto_increment,
+          name char(8) not null,
+          remarks varchar(12),
+          isOnline int (255),
+          img int(255),
+          sex int (255),
+          groups int (255));
     </update>
 
 </mapper>
