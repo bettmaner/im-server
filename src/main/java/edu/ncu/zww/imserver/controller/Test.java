@@ -28,20 +28,18 @@ public class Test {
 
         //mailService.sendMail("1756919428@qq.com",EmailType.REGISTER);
         //userService.createTableByUserId(12111);
-        ArrayList<User> list = new ArrayList<User>();
-            Integer id = 100049;
-            User userInfo = userMapper.getUserByAccount(id);
-            System.out.println(userInfo);
-            list.add(userInfo);
-            ArrayList<User> friends = userMapper.getFriends(id);
-            System.out.println(friends.size());
-            list.addAll(friends);
+        /*Lis list = new ArrayList<User>();
+
+        String id = "000";
+        userMapper.setUserOnline(0);
+        list = userService.queryUser(id);
+
         for (User a: list) {
             System.out.println(a);
-        }
-            System.out.println(list.size());
+        }*/
+//            System.out.println(list.size());
         //System.out.println();
 
-        return "加卡晋级赛"+list.size();
+        return "加卡晋级赛";
     }
 }

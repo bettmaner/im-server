@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 @Service("userService")
 public class UserService {
@@ -47,6 +49,14 @@ public class UserService {
             }
         }
         return list;
+    }
+
+    public void setUserOnline(Integer account){
+       userMapper.setUserOnline(account);
+    }
+
+    public List queryUser(String account) {
+        return userMapper.queryUser(account);
     }
 //    public void createTableByUserId(Integer id){
 //        userMapper.createTableByUserId(id);

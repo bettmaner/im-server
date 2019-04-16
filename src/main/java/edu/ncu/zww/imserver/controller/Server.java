@@ -45,13 +45,12 @@ public class Server {
         try {
             while (isStarted) {
                 System.out.println(MyDate.getDateCN() + " 服务器已启动...");
-                socket = serverSocket.accept();
-                System.out.println("客户端已经连接");
+                socket = serverSocket.accept(); // 不断接收新的socket
                 String ip = socket.getInetAddress().toString();
                 System.out.println(MyDate.getDateCN() + " 用户：" + ip + " 已建立连接");
                 // 为支持多用户并发访问，采用线程池管理每一个用户的连接请求
                 if (socket.isConnected())
-                    executorService.execute(new SocketTask(socket));// 添加到线程池
+                    executorService.execute(new SocketTask(socket));// 将每个socket任务添加到线程池
             }
             if (socket != null)
                 socket.close();

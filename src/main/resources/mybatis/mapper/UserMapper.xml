@@ -26,8 +26,12 @@
         </where>
     </select>
 
-    <select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
-        select * from t${account}
+    <update id="setUserOnline" parameterType="Integer">
+        update user set isOnline = 1 where account = #{account}
+    </update>
+
+    <select id="queryUser" parameterType="String" resultType="java.util.HashMap">
+        select account,name,img from user where account like concat('%',#{account},'%') limit 15
     </select>
 
     <insert id="insertUser">
@@ -45,5 +49,9 @@
           sex int (255),
           groups int (255));
     </update>
+
+    <select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
+        select * from t${account}
+    </select>
 
 </mapper>

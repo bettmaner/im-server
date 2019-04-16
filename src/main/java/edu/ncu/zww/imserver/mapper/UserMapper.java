@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -17,9 +18,11 @@ public interface UserMapper {
 
     public Integer login( User user);
 
-    public ArrayList<User> getFriends(@Param("account") int account);
+    public void setUserOnline(Integer account);
 
     public void insertUser(User user);
+
+    public List queryUser(String account); // 模糊查询其他用户
 
     /*@Update({"create table ${tablename} ( taskid int PRIMARY KEY NOT NULL AUTO_INCREMENT," +
             " title varchar(20) NOT NULL," +
@@ -31,5 +34,8 @@ public interface UserMapper {
             " ENGINE=InnoDB DEFAULT CHARSET=utf8"})
     public void createTableByUserId(@Param("tablename") String tablename);*/
 
+    // 创建存放好友的表
     public void createTableByUserAccount(@Param("tableName") Integer tableName);
+
+    public ArrayList<User> getFriends(@Param("account") int account);
 }
