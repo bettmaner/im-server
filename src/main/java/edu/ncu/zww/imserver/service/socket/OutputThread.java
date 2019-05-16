@@ -6,61 +6,43 @@ import edu.ncu.zww.imserver.bean.TranObjectType;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
-public class OutputThread extends Thread{
-    private OutputThreadMap map;
-    private ObjectOutputStream oos;
-    private TranObject msg;
+public class OutputThread implements Runnable {
+    private SocketTask mClient;
     private boolean isStart = true;// 循环标志位
-    private Socket socket;
 
-    public OutputThread(Socket socket, OutputThreadMap map) {
-        try {
-            this.socket = socket;
-            this.map = map;
-            oos = new ObjectOutputStream(socket.getOutputStream());// 在构造器里面实例化对象输出流
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void setStart(boolean isStart) {
-        this.isStart = isStart;
-    }
-
-    // 调用写消息线程，设置了消息之后，唤醒run方法，可以节约资源
-    public void setMessage(TranObject msg) {
-        this.msg = msg;
-        synchronized (this) {
-            notify();
-        }
+    public OutputThread(SocketTask client) {
+        mClient = client;
     }
 
     @Override
     public void run() {
-        try {
-            while (isStart) {
-                // 没有消息写出的时候，线程等待
-                synchronized (this) {
-                    wait();
+        while (isStart) {
+            // 没有消息写出的时候，线程等待
+            if (mClient.sizeOfQueue() == 0) {
+                try {
+                    // 若没有数据则阻塞
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                if (msg != null) {
-                    oos.writeObject(msg);
-                    oos.flush();
-                    System.out.println("传出去的对象"+msg+msg.getType().getClass());
-                }
-                if (msg.getType() == TranObjectType.LOGOUT) {// 如果是发送下线的消息，就直接跳出循环
-                    break;
-                }
+            } else {
+                TranObject tran = mClient.removeQueueEle(0);
+                mClient.send(tran);
             }
-            if (oos != null)// 循环结束后，关闭流，释放资源
-                oos.close();
-            if (socket != null)
-                socket.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+//                if (msg != null) {
+//                    oos.writeObject(msg);
+//                    oos.flush();
+//                    System.out.println("传出去的对象"+msg+msg.getType().getClass());
+//                }
         }
+        if (mClient != null)
+            mClient = null;
+    }
+
+    public void close() {
+        isStart = false;
     }
 }

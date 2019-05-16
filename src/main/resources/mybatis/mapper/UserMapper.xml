@@ -31,27 +31,49 @@
     </update>
 
     <select id="queryUser" parameterType="String" resultType="java.util.HashMap">
-        select account,name,img from user where account like concat('%',#{account},'%') limit 15
+        select account,name,avatar from user where account like concat('%',#{account},'%') limit 15
     </select>
 
     <insert id="insertUser">
-        insert into user(account,name,email,password,isOnline,img,sex,groups,ip,port)
-        values (#{account},#{name},#{email},#{password},#{isOnline},#{img},#{sex},#{groups},#{ip},#{port})
+        insert into user(account,name,email,password,isOnline,avatar,sex,groups,ip,port)
+        values (#{account},#{name},#{email},#{password},#{isOnline},#{avatar},#{sex},#{groups},#{ip},#{port})
     </insert>
 
     <update id="createTableByUserAccount" parameterType="Integer">
+    	create table t${tableName} (
+    	  id int(255) primary key not null auto_increment,
+          contact_id int(255) not null,
+          note char(15),
+          type int (255),
+          category int(255));
+    </update>
+
+    <!--<select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
+        select users.account,users.name,users.avatar,users.sex,users.isOnline from t${account},users where t${account}.contact_id = users.account;
+    </select>-->
+
+    <select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
+        select account,name,avatar,sex,isOnline from t${account},user where t${account}.contact_id = user.account;
+    </select>
+
+
+    <insert id="insertFriend" parameterType="Integer">
+        insert into t${userAccount}(contact_id,type) values (#{contactId},0);
+    </insert>
+
+    <!--<update id="createTableByUserAccount" parameterType="Integer">
     	create table t${tableName} (
           account int(255) primary key not null auto_increment,
           name char(8) not null,
           remarks varchar(12),
           isOnline int (255),
-          img int(255),
+          avatar varchar(255),
           sex int (255),
           groups int (255));
-    </update>
+    </update>-->
 
-    <select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
+    <!--<select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
         select * from t${account}
-    </select>
+    </select>-->
 
 </mapper>

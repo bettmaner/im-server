@@ -10,11 +10,11 @@ public class TranObject<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer status; // 返回状态，0成功，1失败
+    private Integer status; // 返回状态，0成功，1失败 , 2等待处理（2情况是需要他人确认）
 
-    private String info; // 说明信息
+    private String info; // 消息，主要为错误信息
 
-    private String type; // 发送的消息类型
+    private String type; // 业务类型
 
     private int fromUser;// 来自哪个用户
 
@@ -22,9 +22,10 @@ public class TranObject<T> implements Serializable {
 
     private T object;// 传输的对象
 
+    // 构造函数
     public TranObject(String dealType) {
         this.type = dealType;
-    } // 构造函数
+    }
 
     public void onSuccess(T object){
         this.setStatus(0);

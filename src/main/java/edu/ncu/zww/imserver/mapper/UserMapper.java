@@ -38,4 +38,9 @@ public interface UserMapper {
     public void createTableByUserAccount(@Param("tableName") Integer tableName);
 
     public ArrayList<User> getFriends(@Param("account") int account);
+
+    public void insertFriend(@Param("userAccount") int userAccount, @Param("contactId") int contactId);
+
+    public void insertGroup(@Param("userAccount") int userAccount, @Param("contactId") int contactId);
+
 }

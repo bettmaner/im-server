@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class Test {
@@ -39,7 +40,11 @@ public class Test {
         }*/
 //            System.out.println(list.size());
         //System.out.println();
-
+        int account = 100064;
+        List list = userMapper.getFriends(account);
+        System.out.println(list.get(0).toString());
+//        userMapper.insertMFriend();
+        System.out.println("成功");
         return "加卡晋级赛";
     }
 }

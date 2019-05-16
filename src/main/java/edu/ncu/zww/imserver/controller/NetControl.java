@@ -20,12 +20,18 @@ public class NetControl {
     public List queryContact(HttpServletRequest request) {
         String account = request.getParameter("account");
         String typeStr = request.getParameter("type");
+        System.out.println("找联系人"+account);
         if (typeStr==null) {
             return new ArrayList();
         }
         Integer type = Integer.valueOf(typeStr);
         if (type == 0) {
-            return userService.queryUser(account);
+            List list = userService.queryUser(account);
+            System.out.println("----------输出查询结果--------");
+            for (int i=0;i<list.size();i++) {
+                System.out.println(list.toString());
+            }
+            return list;
         } else {
             //待完善，返回群
             return userService.queryUser(account);

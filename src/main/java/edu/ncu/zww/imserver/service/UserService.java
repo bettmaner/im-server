@@ -14,6 +14,7 @@ public class UserService {
     @Autowired
     UserMapper userMapper;
 
+
 //    public Integer getId(String email){
 //        return userMapper.getId(email);
 //    }
@@ -58,6 +59,13 @@ public class UserService {
     public List queryUser(String account) {
         return userMapper.queryUser(account);
     }
+
+    // 建立好友关系
+    public void makeContact(Integer account1,Integer account2) {
+        userMapper.insertFriend(account1,account2);
+        userMapper.insertFriend(account2,account1);
+    }
+
 //    public void createTableByUserId(Integer id){
 //        userMapper.createTableByUserId(id);
 //    }
