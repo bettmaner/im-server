@@ -61,6 +61,18 @@
         insert into t${userAccount}(contact_id,type) values (#{contactId},0);
     </insert>
 
+    <insert id="insertGroup" parameterType="Integer">
+        insert into t${userAccount}(contact_id,type) values (#{contactId},1);
+    </insert>
+
+    <delete id="removeGroup" parameterType="Integer">
+        delete from t${userAccount} where contact_id = #{contactId} and type = 1;
+    </delete>
+
+    <select id="getGroupList" resultType="edu.ncu.zww.imserver.bean.GroupInfo">
+        select gid,name,avatar,create_time,creator from t${account},groups where contact_id = gid;
+    </select>
+
     <!--<update id="createTableByUserAccount" parameterType="Integer">
     	create table t${tableName} (
           account int(255) primary key not null auto_increment,
@@ -75,5 +87,6 @@
     <!--<select id="getFriends" parameterType="Integer" resultType="edu.ncu.zww.imserver.bean.User">
         select * from t${account}
     </select>-->
+
 
 </mapper>

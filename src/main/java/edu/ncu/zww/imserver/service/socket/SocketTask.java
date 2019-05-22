@@ -5,15 +5,19 @@ import edu.ncu.zww.imserver.common.util.ApplicationContextUtil;
 import edu.ncu.zww.imserver.common.util.MyDate;
 import edu.ncu.zww.imserver.common.util.MyObjectInputStream;
 import edu.ncu.zww.imserver.controller.Server;
+import edu.ncu.zww.imserver.service.GroupService;
 import edu.ncu.zww.imserver.service.UserService;
 import edu.ncu.zww.imserver.service.tools.InvitationExchange;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Member;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import static edu.ncu.zww.imserver.bean.TranObjectType.LOGIN;
 
@@ -36,6 +40,7 @@ public class SocketTask implements Runnable {
     private ObjectInputStream mInput; // 该socket的对象输入流,实例需要有socket
 
     private UserService userService;
+    private GroupService groupService;
     private User user;
 
     public SocketTask(Server server, Socket socket) {
@@ -44,6 +49,7 @@ public class SocketTask implements Runnable {
         this.mServer =server;
         this.socket = socket;
         userService = ApplicationContextUtil.getBean(UserService.class);
+        groupService = ApplicationContextUtil.getBean(GroupService.class);
         user = new User();
 
         try {
@@ -219,7 +225,82 @@ public class SocketTask implements Runnable {
 
     }
 
-    /**--------------- 发送消息 ------------------**/
+    // 创建群
+    public void createGroup(TranObject tranObj) {
+        GroupInfo groupInfo = (GroupInfo) tranObj.getObject();
+        groupInfo.setCreateTime(new Date());
+        // 保存群基本信息和群成员
+        groupService.createGroup(user.getAccount(),groupInfo);
+        // 将群加入到成员的Contact表中
+        for (Integer account: groupInfo.getMemberList()) {
+            userService.addGroup(account,groupInfo.getGid());
+        }
+        tranObj.setStatus(0);// 成功
+        send(tranObj);
+    }
+
+    public void cdGroupMember(TranObject tranObj) {
+        GroupInfo groupInfo = (GroupInfo) tranObj.getObject();
+        Integer gid = groupInfo.getGid();
+        List<Integer> memberList = groupInfo.getMemberList();
+        if (tranObj.getStatus()==0) { // 删除
+            groupService.removeMember(gid,memberList); // 从群成员移除成员
+            for (Integer account : memberList) { // 从成员移除群
+                userService.removeGroup(account,gid);
+            }
+        } else { // 增加
+            groupService.addMember(gid,memberList);
+            for (Integer account : memberList) { // 从成员移除群
+                userService.addGroup(account,gid);
+            }
+        }
+    }
+
+    // 获取用户群聊
+    public void getGroupList(TranObject tranObj) {
+        List<GroupInfo> groupList = userService.getGroupList(user.getAccount());
+        tranObj.setStatus(0);// 成功
+        tranObj.setObject(groupList);
+        send(tranObj);
+    }
+
+    // 群成员
+    public void getMember(TranObject tranObj) {
+        int groupId = (int) tranObj.getObject();
+        List<Contact> memberList = groupService.getMember(groupId);
+        tranObj.setFromUser(groupId);
+        tranObj.onSuccess(memberList);
+        send(tranObj);
+    }
+
+
+    // 处理接收到的消息
+    public void dealMessage(TranObject tranObj) {
+        Message message = (Message) tranObj.getObject();
+        if (message.getChatType()-0 == 0) { // 单人聊天
+            Contact user = new Contact();
+            user.setAccount(111);
+            user.setName("erfde");
+            message.setUser(user);
+            sendFriend(tranObj);
+        } else { // 群聊天
+            Integer groupId = tranObj.getToUser();
+            List<Integer> memberList = groupService.getMemberId(groupId);
+            for (Integer account : memberList) {
+                TranObject newTranObj = new TranObject<Message>(tranObj.getType());
+                newTranObj.setToUser(account); // 用于在线直接得到用户账号
+                message.setReceiveId(account); // 用于保存数据时存放用户账号
+                newTranObj.setObject(message);
+                sendFriend(tranObj);
+            }
+        }
+        // 返回数据
+        // send(tranObj)
+    }
+
+
+
+    /**--------------- 转发消息给好友 ------------------**/
     private void sendFriend(TranObject tranObject) {
         int friendAccount = tranObject.getToUser();
         // 如果接收者已连接服务器
@@ -236,6 +317,9 @@ public class SocketTask implements Runnable {
     // 直接使用输出流发送消息，
     public synchronized void send(TranObject tran) {
         try {
+            System.out.println("-------------------- 向客户端发送数据-----------------------");
+            System.out.println(tran);
+            System.out.println("----------------------------------------------------------");
             mOutput.writeObject(tran);
             mOutput.flush();
             notify();

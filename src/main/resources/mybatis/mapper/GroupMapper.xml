@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ncu.zww.imserver.mapper.GroupMapper">
+
+    <insert id="insertGroupInfo"  useGeneratedKeys="true" keyProperty="gid">
+        insert into groups(name,avatar,create_time,creator)
+        values (#{name},#{avatar},#{createTime},#{creator})
+    </insert>
+
+    <insert id="addMember">
+        insert into member(gid,member_id) values
+        <foreach collection="memberList" item="item" separator=",">
+            (#{gid},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="removeMember">
+        delete from member where gid = #{gid} and member_id in
+        <foreach collection="memberList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMember">
+        delete from member where gid = #{gid} and member_id = #{memberList}
+    </delete>
+
+    <select id="getMember" resultType="edu.ncu.zww.imserver.bean.Contact">
+        select account,name,sex,isOnline from member,user where gid = #{gid} AND member_id = account
+    </select>
+
+    <select id="getMemberId" resultType="Integer">
+        select member_id from member where gid = #{gid}
+    </select>
+
+</mapper>

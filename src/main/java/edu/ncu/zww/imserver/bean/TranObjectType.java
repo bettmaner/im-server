@@ -11,6 +11,9 @@ public class TranObjectType {
     public final static String FRIEND_REQUEST = "FRIEND_REQUEST"; // 好友请求
     public final static String GROUP_REQUEST = "GROUP_REQUEST"; // 群请求
     public final static String CREATE_GROUP = "CREATE_GROUP"; // 创建群聊
+    public final static String GET_ALL_GROUPS = "GET_ALL_GROUPS"; // 获取所有群聊
+    public final static String GET_GROUP_MEMBER = "GET_GROUP_MEMBER"; // 获取群成员
+    public final static String CRUD_GROUP_MEMBER = "CRUD_GROUP_MEMBER"; // 群成员增删
     public final static String LOGOUT = "LOGOUT";   // 用户退出登录
     public final static String FRIENDLOGIN = "FRIENDLOGIN"; // 好友上线
     public final static String FRIENDLOGOUT = "FRIENDLOGOUT";   // 好友下线

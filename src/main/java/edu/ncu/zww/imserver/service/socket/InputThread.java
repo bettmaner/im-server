@@ -127,69 +127,73 @@ public class InputThread implements Runnable{
                             mClient.login(tranObj);
                             break;
 
-                        case FRIEND_REQUEST:// 好友请求
-
-                            // 0表示好友请求成功，1失败，2等待请求
-//                            if ( 0 == tranObj.getStatus()) {
-//                                Integer userAccount = tranObj.getFromUser();
-//                                Integer friendAccount = tranObj.getToUser();
-//                                // 两者数据库好友表互加信息
-//                                // 向好友方发送自己的信息
-//                                // 向自己发送添加成功信息
-//                                User fromUser = (User) tranObj.getObject(); // 获取发送方信息
-//
-//                            }
-                            // 转发邀请给联系人
-                            // out.setMessage...
-//                            UserService.
+                        case FRIEND_REQUEST: // 好友请求
                             mClient.friendInvitation(tranObj);
                             break;
-                        case GROUP_REQUEST:// 群请求
+
+                        case GROUP_REQUEST: // 群请求
                             mClient.groupInvitation(tranObj);
+                            break;
+
+                        case CREATE_GROUP: // 创建群
+                            mClient.createGroup(tranObj);
+                            break;
+
+                        case GET_ALL_GROUPS: // 获取用户群聊
+                            mClient.getGroupList(tranObj);
+                            break;
+
+                        case GET_GROUP_MEMBER:
+                            mClient.getMember(tranObj);
+                            break;
+
+                        case CRUD_GROUP_MEMBER:
+                            mClient.cdGroupMember(tranObj);
                             break;
                         case LOGOUT:// 如果是退出，更新数据库在线状态，同时群发告诉所有在线用户
                             User logoutUser = (User) tranObj.getObject();
-                    /*int offId = logoutUser.getId();
-                    System.out
-                            .println(MyDate.getDateCN() + " 用户：" + offId + " 下线了");
-                    dao.logout(offId);
-                    isStart = false;// 结束自己的读循环
-                    map.remove(offId);// 从缓存的线程中移除
-                    out.setMessage(null);// 先要设置一个空消息去唤醒写线程
-                    out.setStart(false);// 再结束写线程循环
+                            /*int offId = logoutUser.getId();
+                            System.out
+                                    .println(MyDate.getDateCN() + " 用户：" + offId + " 下线了");
+                            dao.logout(offId);
+                            isStart = false;// 结束自己的读循环
+                            map.remove(offId);// 从缓存的线程中移除
+                            out.setMessage(null);// 先要设置一个空消息去唤醒写线程
+                            out.setStart(false);// 再结束写线程循环
 
-                    TranObject<User> offObject = new TranObject<User>(
-                            TranObjectType.LOGOUT);
-                    User logout2User = new User();
-                    logout2User.setId(logoutUser.getId());
-                    offObject.setObject(logout2User);
-                    for (OutputThread offOut : map.getAll()) {// 广播用户下线消息
-                        offOut.setMessage(offObject);
-                    }*/
+                            TranObject<User> offObject = new TranObject<User>(
+                                    TranObjectType.LOGOUT);
+                            User logout2User = new User();
+                            logout2User.setId(logoutUser.getId());
+                            offObject.setObject(logout2User);
+                            for (OutputThread offOut : map.getAll()) {// 广播用户下线消息
+                                offOut.setMessage(offObject);
+                            }*/
                             break;
                         case MESSAGE:// 如果是转发消息（可添加群发）
+                            mClient.dealMessage(tranObj);
                             // 获取消息中要转发的对象id，然后获取缓存的该对象的写线程
-                    /*int id2 = tranObj.getToUser();
-                    OutputThread toOut = map.getById(id2);
-                    if (toOut != null) {// 如果用户在线
-                        toOut.setMessage(tranObj);
-                    } else {// 如果为空，说明用户已经下线,回复用户
-                        TextMessage text = new TextMessage();
-                        text.setMessage("亲！对方不在线哦，您的消息将暂时保存在服务器");
-                        TranObject<TextMessage> offText = new TranObject<TextMessage>(
-                                TranObjectType.MESSAGE);
-                        offText.setObject(text);
-                        offText.setFromUser(0);
-                        out.setMessage(offText);
-                    }*/
+                            /*int id2 = tranObj.getToUser();
+                            OutputThread toOut = map.getById(id2);
+                            if (toOut != null) {// 如果用户在线
+                                toOut.setMessage(tranObj);
+                            } else {// 如果为空，说明用户已经下线,回复用户
+                                TextMessage text = new TextMessage();
+                                text.setMessage("亲！对方不在线哦，您的消息将暂时保存在服务器");
+                                TranObject<TextMessage> offText = new TranObject<TextMessage>(
+                                        TranObjectType.MESSAGE);
+                                offText.setObject(text);
+                                offText.setFromUser(0);
+                                out.setMessage(offText);
+                            }*/
                             break;
                         case REFRESH:
-                    /*List<User> refreshList = dao.refresh(tranObj
-                            .getFromUser());
-                    TranObject<List<User>> refreshO = new TranObject<List<User>>(
-                            TranObjectType.REFRESH);
-                    refreshO.setObject(refreshList);
-                    out.setMessage(refreshO);*/
+                            /*List<User> refreshList = dao.refresh(tranObj
+                                    .getFromUser());
+                            TranObject<List<User>> refreshO = new TranObject<List<User>>(
+                                    TranObjectType.REFRESH);
+                            refreshO.setObject(refreshList);
+                            out.setMessage(refreshO);*/
                             break;
                         default:
                             break;

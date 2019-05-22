@@ -1,5 +1,6 @@
 package edu.ncu.zww.imserver.service;
 
+import edu.ncu.zww.imserver.bean.GroupInfo;
 import edu.ncu.zww.imserver.bean.User;
 import edu.ncu.zww.imserver.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,20 @@ public class UserService {
         userMapper.insertFriend(account2,account1);
     }
 
+    // 向好友列表插入加入的群
+    public void addGroup(Integer user,Integer group) {
+        userMapper.insertGroup(user, group);
+    }
+
+    // 用户退出群移除和群的关系
+    public void removeGroup(Integer user,Integer group) {
+        userMapper.removeGroup(user, group);
+    }
+
+    // 获取用户所有群
+    public List<GroupInfo> getGroupList(Integer account) {
+        return userMapper.getGroupList(account);
+    }
 //    public void createTableByUserId(Integer id){
 //        userMapper.createTableByUserId(id);
 //    }

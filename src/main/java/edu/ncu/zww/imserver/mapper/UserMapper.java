@@ -1,5 +1,6 @@
 package edu.ncu.zww.imserver.mapper;
 
+import edu.ncu.zww.imserver.bean.GroupInfo;
 import edu.ncu.zww.imserver.bean.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -43,4 +44,7 @@ public interface UserMapper {
 
     public void insertGroup(@Param("userAccount") int userAccount, @Param("contactId") int contactId);
 
+    public void removeGroup(@Param("userAccount") int userAccount, @Param("contactId") int contactId);
+
+    public List<GroupInfo> getGroupList(@Param("account") int account);
 }

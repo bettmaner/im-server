@@ -1,8 +1,10 @@
 package edu.ncu.zww.imserver.controller;
 
-import edu.ncu.zww.imserver.bean.User;
+import edu.ncu.zww.imserver.bean.*;
 import edu.ncu.zww.imserver.common.util.EmailType;
+import edu.ncu.zww.imserver.mapper.GroupMapper;
 import edu.ncu.zww.imserver.mapper.UserMapper;
+import edu.ncu.zww.imserver.service.GroupService;
 import edu.ncu.zww.imserver.service.UserService;
 import edu.ncu.zww.imserver.service.tools.MailService;
 import edu.ncu.zww.imserver.service.tools.MailServiceImpl;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class Test {
@@ -22,29 +26,17 @@ public class Test {
     @Autowired
     UserService userService;
     @Autowired
+    GroupService groupService;
+    @Autowired
     UserMapper userMapper;
+    @Autowired
+    GroupMapper groupMapper;
+
     @GetMapping("/sign")
     public String game() throws MessagingException {
-        //System.out.println("可以访问"+userService.getId("1987508059@qq.com"));
 
-        //mailService.sendMail("1756919428@qq.com",EmailType.REGISTER);
-        //userService.createTableByUserId(12111);
-        /*Lis list = new ArrayList<User>();
+        List<Integer> memberList = groupService.getMemberId(6000011);
 
-        String id = "000";
-        userMapper.setUserOnline(0);
-        list = userService.queryUser(id);
-
-        for (User a: list) {
-            System.out.println(a);
-        }*/
-//            System.out.println(list.size());
-        //System.out.println();
-        int account = 100064;
-        List list = userMapper.getFriends(account);
-        System.out.println(list.get(0).toString());
-//        userMapper.insertMFriend();
-        System.out.println("成功");
-        return "加卡晋级赛";
+        return "加卡晋级赛"+memberList.size();
     }
 }
